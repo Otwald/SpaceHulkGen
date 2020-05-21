@@ -14,13 +14,40 @@ class Basic:
         self.checkInit()
         self.scale, self.diff = self.getScale(self.init['level'])
         self.obj = random.randint(0, 5)
-        self.cal = self.getBlock(self.scale)
-        self.enc = self.getBlock(self.scale)
-        print(self.getHull(self.scale))
+        self.hulltypes = self.getHull(self.scale)
+        self.cal = self.getBlock(self.diff, self.hulltypes)
+        self.enc = self.getBlock(self.diff, self.hulltypes)
+        print(self.enc)
         # except RuntimeError as err:
         # print(err)
 
-    def getHull(self, scale) -> dict:
+    def getBlock(self, diff, hull) -> list:
+        """builds an dict of blockers 
+        """
+        out = {}
+        for types in hull:
+            block = random.randint(0, diff)
+            if block < 2:
+                block = 2
+            x = 0
+            temp = []
+            while x < block:
+                x += 1
+                diff, vers = self.getThreat(self.diff)
+                temp.append(
+                    {"threat": diff, "version": vers})
+            out[types] = temp
+        return out
+
+    def getThreat(self, diff):
+        """does a check on table 4-4 and 4-3
+        """
+        roll = random.randint(1, 5) + diff
+        return [(roll-1)//3, roll % 3]
+
+    def getHull(self, scale) -> list:
+        """a huge switch case to determine the Hulltypes
+        """
         x = 0
         out = []
         while x < ((scale//5)+1):
@@ -45,26 +72,6 @@ class Basic:
                 out.append(8)
             x += 1
         return out
-
-    def getBlock(self, scale) -> dict:
-        """builds an dict of blockers 
-        """
-        block = random.randint(0, scale)
-        if block < 2:
-            block = 2
-        x = 0
-        out = []
-        while x < block:
-            x += 1
-            diff, vers = self.getThreat(self.diff)
-            out.append({"threat": ca_en_diff[diff], "version": calamity[vers]})
-        return out
-
-    def getThreat(self, diff):
-        """does a check on table 4-4 and 4-3
-        """
-        roll = random.randint(1, 5) + diff
-        return [(roll-1)//3, roll % 3]
 
     def getScale(self, level: str):
         """uses Pseudo Randomnumbers to determen diffculity and scale
