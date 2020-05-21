@@ -15,12 +15,52 @@ class Basic:
         self.scale, self.diff = self.getScale(self.init['level'])
         self.obj = random.randint(0, 5)
         self.hulltypes = self.getHull(self.scale)
-        print(self.getEnemyPerHull(self.hulltypes))
+        self.hullenemy = self.getEnemyPerHull(self.hulltypes)
         self.block = self.getBlock(self.diff, self.hulltypes)
         # except RuntimeError as err:
         # print(err)
+        out = {
+            'Mission Difficulty': difficulty[self.diff],
+            'Mission Objectiv': objectiv[self.obj],
+            'Space Hulk': self.buildSpaceHulk()
+        }
+
+        print(out)
+
+    def buildSpaceHulk(self):
+        out = {}
+        i = 0
+        for hullt in self.hulltypes:
+            cala = []
+            enc = []
+            for block in self.block[i]:
+                roll = random.randint(0, 1)
+                if(roll == 0):
+                    cala.append(self.getBlockType(block, True))
+                else:
+                    enc.append(self.getBlockType(block, False))
+            out[f"{i+1}. Ship"] = {
+                "Hull Type": hull[hullt],
+                "Enemy Type": enemy[self.hullenemy[i]],
+                "Calamity": cala,
+                "Encounter": enc,
+            }
+
+            i += 1
+        return out
+
+    def getBlockType(self, block, flag: bool):
+        """translates index into readable string
+        """
+        if flag:
+            return f"{ca_en_diff[block['threat']]} {calamity[block['version']]}"
+        else:
+            return f"{ca_en_diff[block['threat']]} {encounter[block['version']]}"
 
     def getEnemyPerHull(self, hull):
+        """uses a switch on the result of a rull to determine
+            enemy type per hull
+        """
         out = []
         for types in hull:
             roll = self.getEnemyRoll(types, self.diff, self.scale)
@@ -45,6 +85,8 @@ class Basic:
         return out
 
     def getEnemyRoll(self, hull, diff, scale):
+        """rolls 1d100 and modifies it
+        """
         roll = random.randint(1, 100)
         if(hull == 4 or hull == 5):
             if(
@@ -83,7 +125,7 @@ class Basic:
         out = {}
         i = 0
         for types in hull:
-            block = random.randint(2, (2 + (2 * diff)))
+            block = random.randint(3, (3 + (2 * diff)))
             x = 0
             temp = []
             while x < block:
