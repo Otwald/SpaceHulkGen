@@ -1,6 +1,6 @@
 import random
 from database import difficulty, objectiv, calamity, ca_en_diff, encounter
-from database import hull, enemy
+from database import hull, enemy, advantage
 
 
 class Basic:
@@ -24,7 +24,6 @@ class Basic:
             'Mission Objectiv': objectiv[self.obj],
             'Space Hulk': self.buildSpaceHulk()
         }
-
         print(out)
 
     def buildSpaceHulk(self):
@@ -55,7 +54,14 @@ class Basic:
         if flag:
             return f"{ca_en_diff[block['threat']]} {calamity[block['version']]}"
         else:
-            return f"{ca_en_diff[block['threat']]} {encounter[block['version']]}"
+            adva = "None"
+            if(block['version'] == 0 or block['version'] == 1):
+                adva = self.getOffAdva()
+            return f"{ca_en_diff[block['threat']]} {encounter[block['version']]} Advantage: {adva}"
+
+    def getOffAdva(self):
+        roll = random.randint(0, 4)
+        return advantage[roll]
 
     def getEnemyPerHull(self, hull):
         """uses a switch on the result of a rull to determine

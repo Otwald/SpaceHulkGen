@@ -15,3 +15,7 @@ enemy = [
     'Lost Souls', 'Orks', 'Tau', 'Eldar', 'Chaos Space Marines, Cultists, and Renegades',
     'Tyranids', 'Chaos Deamons', 'Psychneuein', 'Enslavers'
 ]
+advantage = [
+    'Suprise Attack', 'Shock and Awe', 'Coordinated Assault',
+    'Split-Second Edge', 'Preparation'
+]
